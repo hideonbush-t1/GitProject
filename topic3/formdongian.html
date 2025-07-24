@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form đơn giản </title>
+<style>
+    body {
+      background-color: #ffffff;
+      font-family: Arial;
+      display: flex;
+      justify-content: center;
+    
+    }
+
+    .form-container {
+      width: 350px;
+      padding: 20px;
+      background-color: #fbfbc0;
+      border: 1px solid #ccc;
+    }
+
+    h2 {
+      background-color: #ccffcc;
+      color: blue;
+      padding: 10px;
+      margin: -20px -20px 20px -20px;
+    }
+
+    label {
+      display: inline-block;
+      width: 90px;
+      margin-bottom: 8px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="date"],
+    textarea,
+    select {
+      width: 200px;
+      padding: 4px;
+      margin-bottom: 10px;
+    }
+
+    textarea {
+      height: 60px;
+    }
+
+    .radio-group {
+      margin-bottom: 10px;
+    }
+
+    .radio-group input {
+      margin-left: 5px;
+      margin-right: 3px;
+    }
+
+    .buttons {
+      margin-top: 10px;
+    }
+
+    .buttons input {
+      padding: 5px 10px;
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>ĐĂNG KÝ HỌC VIÊN</h2>
+    <form method="get">
+      <label>Họ và tên:</label>
+      <input type="text" name="hoten"><br>
+
+      <label>Ngày sinh:</label>
+      <input type="date" name="ngaysinh"><br>
+
+      <label>Giới tính:</label>
+      <span class="radio-group">
+        <input type="radio" name="gioitinh" value="Nam"> Nam
+        <input type="radio" name="gioitinh" value="Nữ"> Nữ
+      </span><br>
+
+      <label>Địa chỉ:</label>
+      <textarea name="diachi"></textarea><br>
+
+
+      <label>Lớp:</label>
+      <select name="lop">
+        <option value="">-- Chọn lớp --</option>
+        <option value="lop1">Lớp 1</option>
+        <option value="lop2">Lớp 2</option>
+        <option value="lop3">Lớp 3</option>
+      </select><br>
+
+      <label>Email:</label>
+      <input type="email" name="email"><br>
+
+      <label>Điện thoại:</label>
+      <input type="text" name="dienthoai"><br>
+
+      <div class="buttons">
+        <input type="submit" value="Đăng ký">
+        <input type="reset" value="Nhập lại">
+      </div>
+    </form>
+  </div>
+</body>
+</html>
