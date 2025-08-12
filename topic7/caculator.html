@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Máy tính đơn giản</title>
+</head>
+<body>
+
+  <h2>Kantan Caculator</h2>
+
+  <input id="so1" value="">
+  <input id="so2" value="">
+
+  <br><br>
+
+  <button onclick="cong()">Cộng (+)</button>
+  <button onclick="tru()">Trừ (-)</button>
+  <button onclick="nhan()">Nhân (×)</button>
+  <button onclick="chia()">Chia (/)</button>
+
+  <p id="ketqua"></p>
+
+  <script>
+    function cong() {
+      let a = parseFloat(document.getElementById("so1").value);
+      let b = parseFloat(document.getElementById("so2").value);
+      let kq = a + b;
+      document.getElementById("ketqua").innerText = "Kết quả cộng: " + kq;
+    }
+
+    function tru() {
+      let a = parseFloat(document.getElementById("so1").value);
+      let b = parseFloat(document.getElementById("so2").value);
+      let kq = a - b;
+      document.getElementById("ketqua").innerText = "Kết quả trừ: " + kq;
+    }
+
+    function nhan() {
+      let a = parseFloat(document.getElementById("so1").value);
+      let b = parseFloat(document.getElementById("so2").value);
+      let kq = a * b;
+      document.getElementById("ketqua").innerText = "Kết quả nhân: " + kq;
+    }
+
+    function chia() {
+      let a = parseFloat(document.getElementById("so1").value);
+      let b = parseFloat(document.getElementById("so2").value);
+      if (b === 0) {
+        document.getElementById("ketqua").innerText = "Không thể chia cho 0!";
+      } else {
+        let kq = a / b;
+        document.getElementById("ketqua").innerText = "Kết quả chia: " + kq;
+      }
+    }
+  </script>
+
+</body>
+</html>
