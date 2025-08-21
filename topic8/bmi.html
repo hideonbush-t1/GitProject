@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Tinh BMI</title>
+</head>
+<body>
+  <h2>Tính chỉ số BMI</h2>
+  <script>
+    let canNang = parseFloat(prompt("Nhập cân nặng (kg):"));
+    let chieuCao = parseFloat(prompt("Nhập chiều cao (m):"));
+    
+    let bmi = canNang / (chieuCao * chieuCao);
+
+    alert("Chỉ số BMI của bạn là: " + bmi.toFixed(2));
+
+    if (bmi < 18.5) {
+      alert("Bạn bị gầy");
+    } else if (bmi < 25) {
+      alert("Bạn bình thường");
+    } else if (bmi < 30) {
+      alert("Bạn thừa cân");
+    } else {
+      alert("Bạn béo phì");
+    }
+  </script>
+</body>
+</html>

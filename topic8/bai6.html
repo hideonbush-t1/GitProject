@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiểm tra thưởng doanh số</title>
+</head>
+<body>
+    <h2>Kiểm tra thưởng doanh số bán hàng</h2>
+    <label for="ds">Nhập doanh số bán hàng đạt được:</label>
+    <input type="text" id="ds"><br>
+    <button onclick="kiemTraThuong()">Kiểm tra</button>
+    <p id="result"></p>
+
+    <script>
+        function kiemTraThuong() {
+            let ds = parseFloat(document.getElementById('ds').value);
+            let thuong = 0;
+            let phantram = 0;
+            let result = "";
+
+            if (isNaN(ds) || ds < 0) {
+                result = "Doanh số không hợp lệ. Vui lòng nhập lại.";
+            } else if (ds < 50000000) {
+                result = "Doanh số bán hàng đạt được là: " + ds.toLocaleString() + " đồng. Bạn chưa đủ điều kiện nhận thưởng.";
+            } else if (ds >= 50000000 && ds < 100000000) {
+                phantram = 0.05;
+                thuong = ds * phantram;
+                result = "Doanh số bán hàng đạt được là: " + ds.toLocaleString() + " đồng. Bạn được thưởng 20% doanh số. Số tiền thưởng là: " + thuong.toLocaleString() + " đồng.";
+            } else if (ds >= 100000000 && ds < 200000000) {
+                phantram = 0.1;
+                thuong = ds * phantram;
+                result = "Doanh số bán hàng đạt được là: " + ds.toLocaleString() + " đồng. Bạn được thưởng 25% doanh số. Số tiền thưởng là: " + thuong.toLocaleString() + " đồng.";
+            } else {
+                phantram = 0.15;
+                thuong = ds * phantram;
+                result = "Doanh số bán hàng đạt được là: " + ds.toLocaleString() + " đồng. Bạn được thưởng 30% doanh số. Số tiền thưởng là: " + thuong.toLocaleString() + " đồng.";
+            }
+
+            document.getElementById('result').textContent = result;
+        }
+    </script>
+</body>
+</html>

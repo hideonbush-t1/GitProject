@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        let a = parseInt(prompt("Nhập số nguyên thứ nhất:"));
+        let b = parseInt(prompt("Nhập số nguyên thứ hai:"));
+        let c = parseInt(prompt("Nhập số nguyên thứ ba:"));
+        if(a>b && a>c){
+            document.write(`${a} là số lớn nhất.`);
+        } else if(b>a && b>c) {
+            document.write(`${b} là số lớn nhất.`);
+        } else if(c>a && c>b) {
+            document.write(`${c} là số lớn nhất.`);
+        } else {
+            document.write("k có số nào lớn nhất hoặc có nhiều số bằng nhau.");
+        }
+    </script>
+</body>
+</html>
