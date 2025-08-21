@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        let kwh = parseInt(prompt("Nhập số điện (kWh):"));
+        let tien = 0;
+
+        if (kwh <= 0) {
+            document.write("Số điện không hợp lệ!");
+        } else if (kwh <= 50) {
+            tien = kwh * 1806;
+        } else if (kwh <= 100) {
+            tien = 50 * 1806 + (kwh - 50) * 1866;
+        } else if (kwh <= 200) {
+            tien = 50 * 1806 + 50 * 1866 + (kwh - 100) * 2167;
+        } else if (kwh <= 300) {
+            tien = 50 * 1806 + 50 * 1866 + 100 * 2167 + (kwh - 200) * 2729;
+        } else if (kwh <= 400) {
+            tien = 50 * 1806 + 50 * 1866 + 100 * 2167 + 100 * 2729 + (kwh - 300) * 3050;
+        } else {
+            tien = 50 * 1806 + 50 * 1866 + 100 * 2167 + 100 * 2729 + 100 * 3050 + (kwh - 400) * 3151;
+        }
+
+        document.write(`Số điện tiêu thụ: ${kwh} kWh <br>`);
+        document.write(`Tiền điện phải trả: ${tien.toLocaleString()} VNĐ`);
+    </script>
+</body>
+</html>

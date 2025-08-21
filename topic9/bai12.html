@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        let P = parseFloat(prompt("Nhập số tiền ban đầu (VNĐ):"));
+        let n = parseInt(prompt("Nhập số tháng gửi:"));
+        let r = parseFloat(prompt("Nhập lãi suất hàng tháng (%):")) / 100;
+
+        let S = P * Math.pow(1 + r, n);
+
+        document.write(`Số tiền ban đầu: ${P.toLocaleString()} VNĐ <br>`);
+        document.write(`Số tháng gửi: ${n} <br>`);
+        document.write(`Lãi suất hàng tháng: ${(r*100).toFixed(2)}% <br>`);
+        document.write(`Số tiền cuối cùng: ${S.toLocaleString()} VNĐ`);
+    </script>
+</body>
+</html>
