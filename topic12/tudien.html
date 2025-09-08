@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+    <body>
+    <h2>Từ điển Anh - Việt</h2>
+    <form onsubmit="searchWord(); return false;">
+        <input type="text" id="englishWord" placeholder="Nhập từ tiếng Anh">
+        <button type="submit">Tìm kiếm</button>
+    </form>
+    <p id="result"></p>
+    <script>
+        // Mảng từ tiếng Anh và nghĩa tiếng Việt tương ứng
+        const english = ["hi", "cat", "dog", "red", "king"];
+        const vietnamese = ["chào", "mèo", "chó", "đỏ", "vua"];
+
+        function searchWord() {
+            const word = document.getElementById("englishWord").value.trim().toLowerCase();
+            const index = english.indexOf(word);
+            if (index !== -1) {
+                document.getElementById("result").innerText = `Nghĩa tiếng Việt: ${vietnamese[index]}`;
+            } else {
+                document.getElementById("result").innerText = "Không tìm thấy";
+            }
+        }
+    </script>
+</body>
+</html>
+</body>
+</html>
