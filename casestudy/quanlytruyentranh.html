@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quản lý truyện tranh</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background: #f8f9fa; }
+    .thumb { max-height: 250px; object-fit: cover; border-radius: 5px; }
+  </style>
+</head>
+<body class="bg-light">
+<div class="container py-4">
+  <h2 class="text-center mb-4">📚 Quản lý truyện tranh</h2>
+
+  <!-- Form thêm/sửa truyện -->
+  <div class="card p-3 mb-4 shadow-sm">
+    <h5 id="formTitle">➕ Thêm truyện mới</h5>
+    <div class="row g-2">
+      <div class="col-md-3"><input type="text" id="ten" class="form-control" placeholder="Tên truyện"></div>
+      <div class="col-md-3"><input type="text" id="tacgia" class="form-control" placeholder="Tác giả"></div>
+      <div class="col-md-2">
+        <select id="theloai" class="form-select">
+          <option value="">--Thể loại--</option>
+          <option>Hành động</option>
+          <option>Phiêu lưu</option>
+          <option>Tình cảm</option>
+          <option>Hài hước</option>
+          <option>Kinh dị</option>
+          <option>Giả tưởng</option>
+        </select>
+      </div>
+      <div class="col-md-2"><input type="number" id="soluong" class="form-control" placeholder="Số lượng"></div>
+      <div class="col-md-2"><input type="file" id="anh" class="form-control" accept="image/*"></div>
+    </div>
+
+    <!-- Ảnh xem trước -->
+    <div class="text-center mt-3">
+      <img id="preview" src="https://via.placeholder.com/200x250?text=No+Image" class="thumb border">
+    </div>
+
+    <div class="mt-3 text-end">
+      <button id="btnThem" class="btn btn-primary">+ Thêm truyện</button>
+      <button id="btnCapNhat" class="btn btn-success d-none">💾 Cập nhật</button>
+      <button id="btnHuy" class="btn btn-secondary d-none">Hủy</button>
+    </div>
+  </div>
+
+  <!-- Ô tìm kiếm -->
+  <div class="input-group mb-3">
+    <span class="input-group-text">🔍</span>
+    <input type="text" id="timkiem" class="form-control" placeholder="Tìm theo tên, tác giả hoặc thể loại...">
+  </div>
+
+  <!-- Danh sách truyện -->
+  <div id="danhsach" class="row g-3"></div>
+</div>
+
+<!-- Modal xem chi tiết -->
+<div class="modal fade" id="modalChiTiet" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 id="modalTen" class="modal-title"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <img id="modalAnh" class="img-fluid rounded mb-3" alt="">
+        <p><strong>Tác giả:</strong> <span id="modalTacgia"></span></p>
+        <p><strong>Thể loại:</strong> <span id="modalTheloai"></span></p>
+        <p><strong>Số lượng:</strong> <span id="modalSoluong"></span></p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+let truyens = JSON.parse(localStorage.getItem("truyens")) || [];
+let anhBase64 = "";
+let suaIndex = -1;
+
+const preview = document.getElementById("preview");
+const fileInput = document.getElementById("anh");
+const danhsach = document.getElementById("danhsach");
+const timkiem = document.getElementById("timkiem");
+const btnThem = document.getElementById("btnThem");
+const btnCapNhat = document.getElementById("btnCapNhat");
+const btnHuy = document.getElementById("btnHuy");
+const formTitle = document.getElementById("formTitle");
+
+// ====== Đọc ảnh từ file (nén nhẹ để tránh lỗi quota) ======
+fileInput.addEventListener("change", function() {
+  const file = this.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        const MAX_WIDTH = 300;
+        const scale = MAX_WIDTH / img.width;
+        canvas.width = MAX_WIDTH;
+        canvas.height = img.height * scale;
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        anhBase64 = canvas.toDataURL("image/jpeg", 0.7);
+        preview.src = anhBase64;
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+function luuLocal() {
+  localStorage.setItem("truyens", JSON.stringify(truyens));
+}
+
+function hienThi() {
+  danhsach.innerHTML = "";
+  const tuKhoa = timkiem.value.toLowerCase();
+  const loc = truyens.filter(t =>
+    t.ten.toLowerCase().includes(tuKhoa) ||
+    t.tacgia.toLowerCase().includes(tuKhoa) ||
+    t.theloai.toLowerCase().includes(tuKhoa)
+  );
+
+  if (loc.length === 0) {
+    danhsach.innerHTML = `<p class='text-center text-muted'>Không có truyện nào!</p>`;
+    return;
+  }
+
+  loc.forEach((t, i) => {
+    danhsach.innerHTML += `
+      <div class="col-md-3">
+        <div class="card h-100 shadow-sm">
+          <img src="${t.anh}" class="card-img-top" style="height:200px;object-fit:cover;">
+          <div class="card-body">
+            <h5 class="card-title">${t.ten}</h5>
+            <p class="card-text">Tác giả: ${t.tacgia}</p>
+            <p class="card-text"><small>Thể loại: ${t.theloai}</small></p>
+            <p class="card-text"><small>Số lượng: ${t.soluong}</small></p>
+            <div class="d-flex justify-content-between">
+              <button class="btn btn-sm btn-info text-white" onclick="xemChiTiet(${i})">Xem</button>
+              <button class="btn btn-sm btn-warning" onclick="suaTruyen(${i})">Sửa</button>
+              <button class="btn btn-sm btn-danger" onclick="xoaTruyen(${i})">Xóa</button>
+            </div>
+          </div>
+        </div>
+      </div>`;
+  });
+}
+
+// ====== Popup thông báo ======
+function showPopup(msg, type="success") {
+  const alert = document.createElement("div");
+  alert.className = `alert alert-${type} position-fixed top-0 end-0 m-3 shadow`;
+  alert.style.zIndex = 2000;
+  alert.textContent = msg;
+  document.body.appendChild(alert);
+  setTimeout(() => alert.remove(), 2000);
+}
+
+// ====== Thêm truyện ======
+btnThem.onclick = () => {
+  const ten = document.getElementById("ten").value.trim();
+  const tacgia = document.getElementById("tacgia").value.trim();
+  const theloai = document.getElementById("theloai").value.trim();
+  const soluong = document.getElementById("soluong").value.trim();
+  const anh = anhBase64 || "https://via.placeholder.com/200x250?text=No+Image";
+
+  if (!ten || !tacgia || !theloai || !soluong) {
+    showPopup("❌ Vui lòng nhập đầy đủ thông tin!", "danger");
+    return;
+  }
+
+  truyens.push({ ten, tacgia, theloai, soluong, anh });
+  luuLocal();
+  hienThi();
+  resetForm();
+  showPopup("✅ Thêm truyện thành công!");
+};
+
+// ====== Xóa truyện ======
+function xoaTruyen(i) {
+  if (confirm("Bạn có chắc muốn xóa truyện này không?")) {
+    truyens.splice(i, 1);
+    luuLocal();
+    hienThi();
+    showPopup("🗑️ Xóa truyện thành công!", "warning");
+  }
+}
+
+// ====== Xem chi tiết ======
+function xemChiTiet(i) {
+  const t = truyens[i];
+  document.getElementById("modalTen").textContent = t.ten;
+  document.getElementById("modalTacgia").textContent = t.tacgia;
+  document.getElementById("modalTheloai").textContent = t.theloai;
+  document.getElementById("modalSoluong").textContent = t.soluong;
+  document.getElementById("modalAnh").src = t.anh;
+  new bootstrap.Modal(document.getElementById("modalChiTiet")).show();
+}
+
+// ====== Sửa truyện ======
+function suaTruyen(i) {
+  const t = truyens[i];
+  suaIndex = i;
+  formTitle.textContent = "✏️ Sửa thông tin truyện";
+  document.getElementById("ten").value = t.ten;
+  document.getElementById("tacgia").value = t.tacgia;
+  document.getElementById("theloai").value = t.theloai;
+  document.getElementById("soluong").value = t.soluong;
+  preview.src = t.anh;
+  anhBase64 = t.anh;
+  btnThem.classList.add("d-none");
+  btnCapNhat.classList.remove("d-none");
+  btnHuy.classList.remove("d-none");
+}
+
+// ====== Cập nhật truyện ======
+btnCapNhat.onclick = () => {
+  if (suaIndex === -1) return;
+
+  const ten = document.getElementById("ten").value.trim();
+  const tacgia = document.getElementById("tacgia").value.trim();
+  const theloai = document.getElementById("theloai").value.trim();
+  const soluong = document.getElementById("soluong").value.trim();
+  const anh = anhBase64 || "https://via.placeholder.com/200x250?text=No+Image";
+
+  if (!ten || !tacgia || !theloai || !soluong) {
+    showPopup("❌ Vui lòng nhập đầy đủ thông tin!", "danger");
+    return;
+  }
+
+  truyens[suaIndex] = { ten, tacgia, theloai, soluong, anh };
+  luuLocal();
+  hienThi();
+  resetForm();
+  showPopup("✏️ Sửa truyện thành công!");
+};
+
+// ====== Hủy chỉnh sửa ======
+btnHuy.onclick = resetForm;
+
+function resetForm() {
+  document.querySelectorAll("input[type=text], input[type=number]").forEach(i => i.value = "");
+  fileInput.value = "";
+  preview.src = "https://via.placeholder.com/200x250?text=No+Image";
+  anhBase64 = "";
+  suaIndex = -1;
+  formTitle.textContent = "➕ Thêm truyện mới";
+  btnThem.classList.remove("d-none");
+  btnCapNhat.classList.add("d-none");
+  btnHuy.classList.add("d-none");
+}
+
+// ====== Tìm kiếm ======
+timkiem.oninput = hienThi;
+
+// ====== Khởi động ======
+hienThi();
+</script>
+</body>
+</html>
